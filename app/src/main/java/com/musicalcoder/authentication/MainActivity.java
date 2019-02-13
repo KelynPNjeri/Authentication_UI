@@ -2,6 +2,7 @@ package com.musicalcoder.authentication;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -95,24 +96,20 @@ public class MainActivity extends AppCompatActivity {
         }
 
         //Use API to do User Registration.
-        Call<ResponseBody> registration = Api_Client
+        Call<RegisterUser> registration = Api_Client
                 .getInstance()
                 .getApi()
                 .registerUser(fName, lName, uName, email, pass1, pass2);
-        registration.enqueue(new Callback<ResponseBody>() {
+        registration.enqueue(new Callback<RegisterUser>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                try {
-                    String resp = response.body().string();
-                    Toast.makeText(MainActivity.this, resp, Toast.LENGTH_LONG).show();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
+            public void onResponse(Call<RegisterUser> call, Response<RegisterUser> response) {
+                String resp = String.valueOf(response.body());
+                Log.i("Response", resp);
+                Toast.makeText(MainActivity.this, resp, Toast.LENGTH_LONG).show();
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(Call<RegisterUser> call, Throwable t) {
                 Toast.makeText(MainActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
 
             }

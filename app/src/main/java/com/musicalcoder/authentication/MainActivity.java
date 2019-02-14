@@ -8,12 +8,16 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.musicalcoder.authentication.models.RegisterUser;
 import com.musicalcoder.authentication.models.UserResponse;
 import com.musicalcoder.authentication.network.APIClient;
 import com.musicalcoder.authentication.network.AuthAPI;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -118,7 +122,20 @@ public class MainActivity extends AppCompatActivity {
                 if (response.code() == 201) {
                     UserResponse userResponse = response.body(); // Will map all data to your object
                     Log.d("User Created is ", userResponse.getRegisterUser().getFirst_name());
-                    Toast.makeText(MainActivity.this, "Here", Toast.LENGTH_SHORT).show();
+                } else {
+                    assert response.body() != null;
+                    JSONObject jsonObject = null;
+                    try {
+                        assert response.errorBody() != null;
+                        jsonObject = new JSONObject(response.errorBody().string());
+
+                        Log.d("Error Message is : ", jsonObject.getString("message"));
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
 
@@ -127,7 +144,6 @@ public class MainActivity extends AppCompatActivity {
                 progressDialog.dismiss();
                 //Mostly the error 500
                 Log.d("Error ", t.getLocalizedMessage());
-                Toast.makeText(MainActivity.this, "There", Toast.LENGTH_SHORT).show();
             }
         });
 

@@ -9,6 +9,6 @@ import retrofit2.http.POST;
 
 public interface AuthAPI {
 
-    @POST("user/register")
+    @POST("auth/register")
     Call<UserResponse> registerUser(@Body RegisterUser registerUser);
 }
